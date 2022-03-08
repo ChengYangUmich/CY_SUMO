@@ -9,7 +9,7 @@
 ## Preparation
 ## Dependencies
 The following dependencies are *required* to run the examples and use `CY_SUMO`:
-- `sumo.sumoscheduler` and its dependencies.  --> available in the './src/sumoscheduler.y'
+- `sumo.sumoscheduler` and its dependencies.  --> available as the './src/sumoscheduler.py'
 - [`numpy`](https://numpy.org/doc/stable/user/index.html)
 - [`pandas`](https://pandas.pydata.org/)
 - [`os`](https://docs.python.org/3/library/os.html)
