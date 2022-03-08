@@ -14,3 +14,4 @@ The following dependencies are *required* to run the examples and use `CY_SUMO`:
 - [`pandas`](https://pandas.pydata.org/)
 - [`os`](https://docs.python.org/3/library/os.html)
 - [`datatime`](https://docs.python.org/3/library/datetime.html) 
+- [`time`](https://docs.python.org/3/library/time.html) 
