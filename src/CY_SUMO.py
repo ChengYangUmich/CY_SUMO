@@ -230,7 +230,7 @@ class CY_SUMO():
         else:
             self._param_commands_dic[0] = self._line_command(self.param_dic)
     
-    # Code blokc for replicating steady-state simulations
+    # Code block replicating steady-state simulations
     def steady_state(self, save_table = True, 
                      save_name = "steady_state_result.xlsx", save_xml = False):
         """
@@ -326,3 +326,64 @@ class CY_SUMO():
         jobData = self.sumo.getJobData(job)
         self.current_sumo_vars[job] = {**data,**jobData}
         
+        
+    # Code block replicating dynamic simulations with initial states loaded       
+    def dynamic_run(self, dynamic_inputs, 
+                    save_table= True, save_name = "dynamic_result.xlsx"):
+        # Create a dictionary to store dynamic simulation results
+        self._myDataDic = {key:pd.DataFrame() for key in dynamic_inputs.keys()}
+        msg_callback = self._msg_callback_dyn
+        datacomm_callback = self._datacomm_callback_dyn
+        self._set_up_scheduler(msg_callback, datacomm_callback)
+        
+        for a_dyn_key, a_dyn_input in dynamic_inputs.items():
+            # Generate the commands for inputs 
+            commands =  [f"load {a_dyn_input['xml']};", "maptoic;"]
+            for a_constant_var, its_value in  a_dyn_input['param_dic'].items():
+                commands.append(f"set {a_constant_var} {its_value};")
+                # Add adjusted variables in sumo variable 
+                self.sumo_variables.append(a_constant_var)
+            # Add dynamic input sumo variables 
+            for a_dyn_var in a_dyn_input["input_fun"].keys():
+                self.sumo_variables.append(a_dyn_var)
+            commands.append(f"set Sumo__StopTime {a_dyn_input['stop_time']};")
+            commands.append(f"set Sumo__DataComm {a_dyn_input['data_comm_freq']};")
+            commands.append("mode dynamic;")
+            commands.append("start;")
+            # schedule jobs 
+            self.sumo.schedule(self.model, 
+                                commands=commands, 
+                                jobData= {'key_ID':a_dyn_key,
+                                          'info':a_dyn_input}, 
+                                variables=self.sumo_variables,
+                                blockDatacomm=True)
+        print("Jobs started:", self.sumo.scheduledJobs)
+    
+        while (self.sumo.scheduledJobs > 0):
+            time.sleep(0.1)
+        
+        self.sumo.cleanup() 
+        
+        # Code block to save self_myDataDic to a excel file 
+        if save_table == True:
+            with pd.ExcelWriter(save_name) as writer:
+                for a_key in list(self._myDataDic.keys()):
+                    a_df = self._myDataDic[a_key]
+                    sheet_name = f"{a_key}"
+                    a_df.to_excel(writer, sheet_name)
+            print(f"{save_name} was saved successfully")
+    
+    def _msg_callback_dyn(self,job,msg):
+        print(f"SUMO: #{job} {msg}")
+        if (self.sumo.isSimFinishedMsg(msg)):
+            self.sumo.finish(job) 
+            
+    def _datacomm_callback_dyn(self,job,data):
+        jobData = self.sumo.getJobData(job)
+        data["Sumo__Time"] /= self.sumo.dur.day        
+        self._myDataDic[jobData['key_ID']] = self._myDataDic[jobData['key_ID']].append(data,ignore_index = True)
+        if len(jobData['info']['input_fun']) !=0:
+            for a_var,a_fun in jobData['info']['input_fun'].items():
+                current_value = a_fun(data["Sumo__Time"])
+                print(f"{a_var} == {current_value}")
+                self.sumo.sendCommand(job, f"set {a_var} {current_value}")

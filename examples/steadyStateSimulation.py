@@ -17,7 +17,7 @@ from CY_SUMO import CY_SUMO, create_policy_dict
 This is an example script to replicate the steady-state simulations in the SUMO GUI
 
 Script objective： 
-Run multiple simulations with a set of different combinations of inputs
+Run multiple steady state simulations with different combinations of inputs
 
 """
 
@@ -29,12 +29,12 @@ model = os.path.join(current_path,"A2O.dll")
 # Create a list of sumo encode variables to track 
 sumo_variables = [
                   "Sumo__Plant__Effluent__SNHx",
-                  "Sumo__Plant__Effluent__SNHx",
+                  "Sumo__Plant__Effluent__SNOx",
                   "Sumo__Plant__Effluent__TCOD",
                   "Sumo__Plant__Effluent__SPO4"]
 # Create the param_dict  
-input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [0.5,1],
-             'Sumo__Plant__Influent__param__Q':[22000,24000]}
+input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2],
+             'Sumo__Plant__Influent__param__Q':[20000, 24000]}
 param_dict = create_policy_dict(input_dic)
 
 # param_dict = {'trial1':{'Sumo__Plant__CSTR3__param__DOSP': 2,
@@ -50,4 +50,4 @@ test = CY_SUMO(model= model,
 # and save .xml for each of steady-state simulations  
 test.steady_state(save_table = True, 
                   save_name = "test1.xlsx", 
-                  save_xml = False)
+                  save_xml = True)
