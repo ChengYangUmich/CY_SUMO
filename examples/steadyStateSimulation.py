@@ -50,4 +50,4 @@ test = CY_SUMO(model= model,
 # and save .xml for each of steady-state simulations  
 test.steady_state(save_table = True, 
                   save_name = "test1.xlsx", 
-                  save_xml = True)
+                  save_xml = False)
