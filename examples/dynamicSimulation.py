@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 import datetime
 # Import CY_SUMO class 
-from CY_SUMO import CY_SUMO, create_policy_dict
+from CY_SUMO import CY_SUMO, create_param_dict
 
 """
 This is an example script to replicate the dynamic simulations in the SUMO GUI,

@@ -8,9 +8,9 @@ import numpy as np
 import datetime
 import time 
 
-def create_policy_dict(a_dict):
+def create_param_dict(a_dict):
     """
-    This is a function to create the required dictionary for the policy space. 
+    This is a function to create the required parameter dictionary from lists of inputs' values. 
 
     Parameters
     ----------

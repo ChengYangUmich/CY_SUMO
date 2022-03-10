@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 import datetime
 # Import CY_SUMO class 
-from CY_SUMO import CY_SUMO, create_policy_dict
+from CY_SUMO import CY_SUMO, create_param_dict
 
 """
 This is an example script to replicate the steady-state simulations in the SUMO GUI
@@ -33,9 +33,9 @@ sumo_variables = [
                   "Sumo__Plant__Effluent__TCOD",
                   "Sumo__Plant__Effluent__SPO4"]
 # Create the param_dict  
-input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2.01],
+input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2],
              'Sumo__Plant__Influent__param__Q':[21000, 24000]}
-param_dict = create_policy_dict(input_dic)
+param_dict = create_param_dict(input_dic)
 
 # param_dict = {'trial1':{'Sumo__Plant__CSTR3__param__DOSP': 2,
 #                         'Sumo__Plant__Influent__param__Q':24000},
