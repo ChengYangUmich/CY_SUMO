@@ -330,6 +330,40 @@ class CY_SUMO():
     # Code block replicating dynamic simulations with initial states loaded       
     def dynamic_run(self, dynamic_inputs, 
                     save_table= True, save_name = "dynamic_result.xlsx"):
+        """
+        Dynamic runs with given initial conditions (.xml), changed parameters, input functions
+
+        Parameters
+        ----------
+        dynamic_inputs : dictionary (nested)
+            e.g. 
+            dynamic_inputs = 
+            {'Trial1':{'xml':'Cmd_ID_0.xml',
+                            'stop_time':1*dur.day,
+                            'data_comm_freq':1*dur.hour,
+                            'param_dic':{'Sumo__Plant__CSTR3__param__DOSP': 2,
+                                         'Sumo__Plant__Influent__param__Q':24000},
+                            'input_fun':{"Sumo__Plant__Influent__param__TKN": lambda t: 32 + (42-32)/(1+np.exp(-5*(t-0.01))),
+                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)}},
+             'Trial2':{'xml':'Cmd_ID_0.xml',
+                             'stop_time':1*dur.day,
+                             'data_comm_freq':1*dur.hour,
+                             'param_dic':{'Sumo__Plant__CSTR3__param__DOSP': 1,
+                                          'Sumo__Plant__Influent__param__Q':20000},
+                             'input_fun':{"Sumo__Plant__Influent__param__TKN": lambda t: 32 + (42-32)/(1+np.exp(-5*(t-0.01))),
+                                             "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)}}
+                  }
+            
+        save_table : Boolean, optional
+            Whether to save the simulations to a .xlsx file whose sheets are keys in the `dynamic_inputs`. The default is True.
+        save_name : String ended with '.xlsx', optional
+            Name of the excel file to save. The default is "dynamic_result.xlsx".
+
+        Returns
+        -------
+        None.
+
+        """
         # Create a dictionary to store dynamic simulation results
         self._myDataDic = {key:pd.DataFrame() for key in dynamic_inputs.keys()}
         msg_callback = self._msg_callback_dyn
@@ -374,11 +408,39 @@ class CY_SUMO():
             print(f"{save_name} was saved successfully")
     
     def _msg_callback_dyn(self,job,msg):
+        """
+        (Internal) method
+        Parameters
+        ----------
+        job : Int
+            The job ID defined in the sumo scheduler
+        msg : string 
+            Message similar to the sumo core window 
+
+        Returns
+        -------
+        None.
+
+        """
         print(f"SUMO: #{job} {msg}")
         if (self.sumo.isSimFinishedMsg(msg)):
             self.sumo.finish(job) 
             
-    def _datacomm_callback_dyn(self,job,data):
+    def _datacomm_callback_dyn(self, job, data):
+        """
+        (Internal) method
+        Parameters
+        ----------
+        job : Int
+            The job ID defined in the sumo scheduler
+        data : dictionary 
+            Stored information defined in the self.sumo.schedule() - jobData 
+
+        Returns
+        -------
+        None.
+
+        """
         jobData = self.sumo.getJobData(job)
         data["Sumo__Time"] /= self.sumo.dur.day        
         self._myDataDic[jobData['key_ID']] = self._myDataDic[jobData['key_ID']].append(data,ignore_index = True)
@@ -387,3 +449,4 @@ class CY_SUMO():
                 current_value = a_fun(data["Sumo__Time"])
                 print(f"{a_var} == {current_value}")
                 self.sumo.sendCommand(job, f"set {a_var} {current_value}")
+                
