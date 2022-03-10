@@ -1,5 +1,5 @@
 # Tutorial for CY_SUMO
-Detailed Tutorial for using CY_SUMO
+Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through together examples that are provided in this repo (`.\examples\`) and template scripts can be adjusted based on users' needs.  
  > Author: Cheng Yang, University of Michigan 
  > 
  > Version: 2022_03_10
@@ -14,27 +14,24 @@ Detailed Tutorial for using CY_SUMO
 > In the SUMO GUI, equations are complied to C++ code for faster calculations. It is often to see a message in the bottom-left of the GUI - 'Preparing Simulation: Build progress: x% '. This process is called compling, where all information in the GUI are complied to a `.dll` file. Python can directly communicate with this computational core with SUMO-Python API.
 > 
 > **How to find this core?**
-> 
-> In the GUI, go to `View` --> `Directories` --> `Project Directory`. In the opened directory, there is a `sumoproject.dll`, which is the sumo computational core. 
-> 
-> <img src="/TutorialPics/FindTempDir.JPG" alt="FineTempPic" style="height: 300px; width:800px;"/>  
+> >
+> > In the GUI, go to `View` --> `Directories` --> `Project Directory`. In the opened directory, there is a `sumoproject.dll`, which is the sumo computational core. 
+> >
+> > <img src="/TutorialPics/FindTempDir.JPG" alt="FineTempPic" style="height: 300px; width:800px;"/>  
 
 
 ### Storage of SUMO variables - `XXX.xml`
-> Values of all variables and information @ current simulation time stamp, including parameters, states, constants and others, are stored in a `.xml` file, which could be loaded into the sumo computational core or saved from the sumo computational core. 
+> - Values of all variables and information @ current simulation time stamp, including parameters, states, constants and others, are stored in a `XXX.xml` file, which could be loaded into the sumo computational core or saved from the sumo computational core. 
+> - Dynamic Inputs (input_tables) are stored in a seperate form called `.tsv`. They could be found the same way as fining the `sumoproject.dll`
 > 
 > **How to save .xml file for CY_SUMO?**
 > 
-> > In the GUI, go to `Advanced` --> `Core  Window` (ALT+C).
-> > 
+> > In the GUI, go to `Advanced` --> `Core  Window` (ALT+C). In the command line, type in `save XXX.xml`. The `XXX.xml` will be saved in the `Project Directory`.
 > > <img src="/TutorialPics/CoreWindow.JPG" alt="CoreWindow" style="height: 600px; width:800px;"/>  
-> > 
-> > In the command line, type in `save A2O.xml`. The .xml will be saved in the `Project Directory`.
-> > 
 
 
 ### SUMO Incode Names 
-> SUMO Incode Names are names defined in an specific way that sumo computational core can understand. They are important, because they are variable names in the Python scripts. **For details about naming rules, please refer to "The Book of SumoSlang"- 7 Namespaces**.    
+> SUMO Incode Names are names defined in an specific way that sumo computational core can understand. They are important, because they are variable names used in the SUMO-Python API and CY_SUMO. **For details about naming rules, please refer to "The Book of SumoSlang"- 7 Namespaces**.    
 > 
 > **Examples:**
 > 
@@ -54,5 +51,14 @@ Detailed Tutorial for using CY_SUMO
 
 
 
-## Step 1: Prepare ingredients needed from SUMO GUIs 
-### 
+## Step 1: Prepare ingredients needed from CY_SUMO 
+1. Open target sumo project with SUMO GUI. In this case, it is `A2O plant.sumo`.
+2. Open the `Project Directory` of the SUMO project, copy and paste the `sumoproject.dll` to the working directory of python. In this case, it was renamed into `A2O.dll`. Rename is not mandatory.
+3. Save current values of the SUMO variable using the `save XXX.xml` command, then copy and paste it from the `Project Directory` to the working directory of python. In this case, it was saved as `A2O.xml`
+4. For dynamic simulations, if tabular inputs are used in SUMO GUI, these tables are converted into `.tsv` files. Copy and paste all the `.tsv` files to the working directory of python. In this case, the '.tsv' file is `Influent_Table1.tsv`.
+
+> Checklist in the python working directory
+> - `A2O plant.sumo`
+> - `A2O.dll`
+> - `A2O.xml`
+> - `Influent_Table1.tsv`
