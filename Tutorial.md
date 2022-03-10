@@ -7,7 +7,12 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 ## Table of contents
 [**Supplimentary SUMO Knowledge**](#step0)
    1. [The computational core - `sumoproject.dll`](#sumocore)
-
+   2. [Storage of SUMO variables - `XXX.xml`](#sumostore)
+   3. [SUMO Incode Names](#sumoincode)
+[**Prepare ingredients needed from CY_SUMO**](#step1)
+[**Steady-state simulations**](#step2)
+[**Dynamic simulations**](#step3)
+[**Dynamic simulations with steady-state start**](#step4)
 
 ## Supplimentary SUMO Knowledge <a name="step0"></a>
 ### The computational core - `sumoproject.dll`<a name="sumocore"></a>
@@ -20,7 +25,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 > > <img src="/TutorialPics/FindTempDir.JPG" alt="FineTempPic" style="height: 300px; width:800px;"/>  
 
 
-### Storage of SUMO variables - `XXX.xml`
+### Storage of SUMO variables - `XXX.xml`<a name="sumostore"></a>
 > - Values of all variables and information @ current simulation time stamp, including parameters, states, constants and others, are stored in a `XXX.xml` file, which could be loaded into the sumo computational core or saved from the sumo computational core. 
 > - Dynamic Inputs (input_tables) are stored in a seperate form called `.tsv`. They could be found the same way as fining the `sumoproject.dll`
 > 
@@ -30,7 +35,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 > > <img src="/TutorialPics/CoreWindow.JPG" alt="CoreWindow" style="height: 600px; width:800px;"/>  
 
 
-### SUMO Incode Names 
+### SUMO Incode Names <a name="sumoincode"></a>
 > SUMO Incode Names are names defined in an specific way that sumo computational core can understand. They are important, because they are variable names used in the SUMO-Python API and CY_SUMO. **For details about naming rules, please refer to "The Book of SumoSlang"- 7 Namespaces**.    
 > 
 > **Examples:**
@@ -53,7 +58,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 
 
 
-## Prepare ingredients needed from CY_SUMO 
+## Prepare ingredients needed from CY_SUMO <a name="step1"></a>
 1. Open target sumo project with SUMO GUI. In this case, it is `A2O plant.sumo`.
 2. Open the `Project Directory` of the SUMO project, copy and paste the `sumoproject.dll` to the working directory of python. In this case, it was renamed into `A2O.dll`. Rename is not mandatory.
 3. Save current values of the SUMO variable using the `save XXX.xml` command, then copy and paste it from the `Project Directory` to the working directory of python. In this case, it was saved as `A2O.xml`
@@ -67,7 +72,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 > - `CY_SUMO.py`
 > - `sumoscheduler.py` (may not needed)
 
-## Steady-state simulations 
+## Steady-state simulations <a name="step2"></a>
 **Scirpt template: [steadyStateSimulation.py](https://github.com/ChengYangUmich/CY_SUMO/blob/main/examples/steadyStateSimulation.py)** 
 > 1. Import required package and modules
 ```python
@@ -140,7 +145,7 @@ from CY_SUMO import CY_SUMO, create_policy_dict
 >>   - Four `.xml` files, namely `Cmd_ID_0.xml`,`Cmd_ID_1.xml`,`Cmd_ID_2.xml`,`Cmd_ID_3.xml` with identical/similar file size. If size differs more than several KBs, go to `CY_SUMO.py`- Line 307. Increase the number(in seconds) in time.sleep(0.2) so that the .ddl has more time to save results before being cleaned up. 
 >>   - An excel file, 'steady_state_results.xlsx' that stores results of each steady-state simulations, whose rows are different simuluations and columns are variables of interest. 
 
-## Dynamic simulations 
+## Dynamic simulations <a name="step3"></a>
 **Scirpt template: [dynamicSimulation.py](https://github.com/ChengYangUmich/CY_SUMO/blob/main/examples/dynamicSimulation.py)** 
 > 1. Import required package and modules
 ```python
@@ -224,7 +229,7 @@ from CY_SUMO import CY_SUMO, create_policy_dict
 >>   - An excel file, 'dynamic.xlsx' that stores results of each dynamic simulations in a sheet, each columns of which are time series of sumo variables. 
 
 
-## Dynamic simulations with steady-state start
+## Dynamic simulations with steady-state start<a name="step4"></a>
 In the SUMO GUI, there is a button called 'Steady-state start' under `SIMULATION-Dyamic` where the steady-state is reached first and then the dynamic simulation starts. This could also be fulfilled in CY_SUMO by assembing the previous two steps. 
 > Step I: run a batch of steady_state simulations and save them as .xml files with `CY_SUMO.steady_state()`
 > Step II: specify these .xml files into the `dynamic_inputs` and continue dynamic simulation with `CY_SUMO.dynamic_run()` 
