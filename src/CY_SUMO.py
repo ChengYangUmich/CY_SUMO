@@ -15,7 +15,7 @@ def create_policy_dict(a_dict):
     Parameters
     ----------
     a_dict : dictionary
-        keys: (string) sumo encode variables
+        keys: (string) sumo incode variables
         values: (list) their corresponding values' lists 
         example: 
         {"Sumo__Plant__CSTR2__param__DOSP":[0], 
@@ -27,8 +27,8 @@ def create_policy_dict(a_dict):
     policy_dict: (nested dictionary)
         keys: (int) starting from 0 
         values: (dictionary) 
-            keys: (string) sumo encode variables 
-            values: (numeric type: int/float) the value of sumo encode variables
+            keys: (string) sumo incode variables 
+            values: (numeric type: int/float) the value of sumo incode variables
    example: 
         {
         0: {'Sumo__Plant__CSTR2__param__DOSP': 0,
@@ -47,7 +47,7 @@ def create_policy_dict(a_dict):
     """
     
     if not isinstance(a_dict, dict):
-        raise TypeError("The input should be a dictionary whose keys are sumo_encode names and values are lists of the their corresponding values")
+        raise TypeError("The input should be a dictionary whose keys are sumo incode names and values are lists of the their corresponding values")
     else:
         policy_dict = {}
         name_list=list(a_dict.keys())
@@ -81,7 +81,7 @@ class CY_SUMO():
         under the same path, e.g."C:/Users/28417/sumocore.dll" 
             
         `sumo_variables`: list
-        The sumo encode variables to track in the ouputs,
+        The sumo incode variables to track in the ouputs,
         which can be found in the .xml file  
         e.g.  ["Sumo__Time",
                "Sumo__Plant__Effluent1__SNHx",

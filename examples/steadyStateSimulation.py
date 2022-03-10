@@ -26,7 +26,7 @@ Run multiple steady state simulations with different combinations of inputs
 current_path = os.getcwd()
 # Initiate name string of the sumo .dll core    
 model = os.path.join(current_path,"A2O.dll")
-# Create a list of sumo encode variables to track 
+# Create a list of sumo incode variables to track 
 sumo_variables = [
                   "Sumo__Plant__Effluent__SNHx",
                   "Sumo__Plant__Effluent__SNOx",
