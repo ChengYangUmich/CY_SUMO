@@ -45,7 +45,9 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 > 
 > **Ways to query these variables**
 > 
-> 1. Search within the .xml file with CLT+F (Recommended).
+> 1. Search within the .xml file with CLRT+F (Recommended).
+>  - Open the `XXX.xml` file with `.txt` format
+>  - CLRT+F (Keyboard Shortcut for Search & Replace) + key words (e.g. SNHx, effluent)  
 >      
 > 2. Search in SUMO GUI. 'OUTPUT SETUP'--> bottom left panel --> dropdown bar changed from 'Variables' to 'Raw' --> search the tree structure and hover mouse on variables;       
 
@@ -101,13 +103,13 @@ from CY_SUMO import CY_SUMO, create_policy_dict
 >>   3. Specify the input sumo variables that are changed in each steady-state simulation results.
 >>   
 >>   **Note:**
->>   - A self-defined function `create_policy_dict()` from CY_SUMO.py was used to format inputs ranges into the standard input form `param_dict`for CY_SUMO(). 
+>>   - A self-defined function `create_param_dict()` from CY_SUMO.py was used to format inputs ranges into the standard input form `param_dict`for CY_SUMO(). 
 >>   - New parameters could be added in the form of `'sumo_incode_name': [x,y,...,z]` into the curly bracket of `input_dict`.
 >>   - New parameters could also be added in the form of `'sumo_incode_name': value` into each batch of `param_dict`.   
 >>```python
 >> input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2.01],
 >>              'Sumo__Plant__Influent__param__Q':[21000, 24000]}
->> param_dict = create_policy_dict(input_dic)
+>> param_dict = create_param_dict(input_dic)
 >> ```  
 >> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where the standard `param_dic` form should be:
 >> ```python 
@@ -137,3 +139,86 @@ from CY_SUMO import CY_SUMO, create_policy_dict
 >>   - No error message shown in the Python console + logs (e.g. #1 530049 Core loop started. #1 530024 Following variable Sumo__Plant__Effluent__SNHx) from the `A2O.dll` are normal.   
 >>   - Four `.xml` files, namely `Cmd_ID_0.xml`,`Cmd_ID_1.xml`,`Cmd_ID_2.xml`,`Cmd_ID_3.xml` with identical/similar file size. If size differs more than several KBs, go to `CY_SUMO.py`- Line 307. Increase the number(in seconds) in time.sleep(0.2) so that the .ddl has more time to save results before being cleaned up. 
 >>   - An excel file, 'steady_state_results.xlsx' that stores results of each steady-state simulations, whose rows are different simuluations and columns are variables of interest. 
+
+## Dynamic simulations 
+**Scirpt template: [dynamicSimulation.py](https://github.com/ChengYangUmich/CY_SUMO/blob/main/examples/dynamicSimulation.py)** 
+> 1. Import required package and modules
+```python
+import sys
+# add the path where the CY_sumo locates 
+sys.path.append("..\src")
+from sumoscheduler import SumoScheduler
+from sumoscheduler import Duration as dur 
+import os
+import pandas as pd 
+import numpy as np
+import datetime
+# Import CY_SUMO class 
+from CY_SUMO import CY_SUMO, create_policy_dict
+```
+
+> 2. Define inputs for `CY_SUMO()`
+>>   1. Specify the sumo computational core 
+>> ```python
+>> # Get current path 
+>> current_path = os.getcwd()
+>> # Initiate name string of the sumo .dll core    
+>> model = os.path.join(current_path,"A2O.dll")
+>> ```
+>>   2. Specify the output sumo variables (incode names) to be stored in excel. **Note**: "Sumo_Time" is a mandatory output to be included in `sumo_variables` for dynamic simulations 
+>> ```python
+>> sumo_variables = ["Sumo__Time",
+>>                  "Sumo__Plant__Effluent__SNHx",
+>>                  "Sumo__Plant__Effluent__SNOx",
+>>                  "Sumo__Plant__Effluent__TCOD",
+>>                  "Sumo__Plant__Effluent__SPO4"]
+>> ```
+>>   3. Specify the dynamic settings for each dynamic simulation.
+>> The `dynamic_inputs` is a nested dictionary, whose keys are names for dynamic simulations and values are settings.
+>> Specficially:
+>> `xml`: the initial conditions to load, which represents values @ t = 0
+>> 
+>> `stop_time`: the total sumo simulation time, equivalent to the 'Stop time' in SUMO GUI-SIMULATION-Dynammic. 
+>>   
+>> `data_comm_freq`: the data inverval for outputs, equivalent to the 'Data interval' in SUMO GUI-SIMULATION-Dynammic.
+>> 
+>> `param_dic`: the constant parameters to change in the simulation (only used when they are different from .xml) 
+>> 
+>> `input_fun`: the time-dependent parameters to change in the dynamic simulation, in the form of functions of `t` (in unit of days) 
+>> 
+>> `tsv_file`: the dynamic input tables used in the SUMO GUI.  
+>>```python
+>> dynamic_inputs = {'Trial1':{'xml':'Cmd_ID_0.xml',
+>>                            'stop_time':1*dur.day,
+>>                            'data_comm_freq':1*dur.hour,
+>>                            'param_dic':{'Sumo__Plant__CSTR3__param__DOSP': 2,
+>>                                         'Sumo__Plant__Influent__param__Q':24000},
+>>                            'input_fun':{"Sumo__Plant__Influent__param__TKN": lambda t: 32 + (42-32)/(1+np.exp(-5*(t-0.01))),
+>>                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)},
+>>                            'tsv_file':['Influent_Table1.tsv']},
+>>                  'Trial2':{'xml':'Cmd_ID_0.xml',
+>>                            'stop_time':1*dur.day,
+>>                            'data_comm_freq':1*dur.hour,
+>>                            'param_dic':{'Sumo__Plant__CSTR3__param__DOSP': 1,
+>>                                         'Sumo__Plant__Influent__param__Q':20000},
+>>                            'input_fun':{"Sumo__Plant__Influent__param__TKN": lambda t: 32 + (42-32)/(1+np.exp(-5*(t-0.01))),
+>>                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)},
+>>                            'tsv_file':['Influent_Table1.tsv']}
+>>                  }
+>> ```  
+
+>>   4. Create the `CY_SUMO()` object
+>> ```python 
+>>   test = CY_SUMO(model= model,
+>>               sumo_variables=sumo_variables)
+>> ```
+>>   5. Run dynamic_run()
+>> ```python
+>> test.dynamic_run(dynamic_inputs, save_name = "steady_state_results.xlsx")
+>> ```
+>> where:
+>> - `save_name`: Used to rename the excel file.
+>>   
+>>  6. Expected Results
+>>   - No error message shown in the Python console + logs (e.g. #1 530049 Core loop started. #1 530024 Following variable Sumo__Plant__Effluent__SNHx) from the `A2O.dll` are normal.   
+>>   - An excel file, 'dynamic.xlsx' that stores results of each dynamic simulations in a sheet, each columns of which are time series of sumo variables. 
