@@ -9,10 +9,15 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
    1. [The computational core - `sumoproject.dll`](#sumocore)
    2. [Storage of SUMO variables - `XXX.xml`](#sumostore)
    3. [SUMO Incode Names](#sumoincode)
+
 [**Prepare ingredients needed from CY_SUMO**](#step1)
+
 [**Steady-state simulations**](#step2)
+
 [**Dynamic simulations**](#step3)
+
 [**Dynamic simulations with steady-state start**](#step4)
+
 
 ## Supplimentary SUMO Knowledge <a name="step0"></a>
 ### The computational core - `sumoproject.dll`<a name="sumocore"></a>
