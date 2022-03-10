@@ -33,8 +33,8 @@ sumo_variables = [
                   "Sumo__Plant__Effluent__TCOD",
                   "Sumo__Plant__Effluent__SPO4"]
 # Create the param_dict  
-input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2],
-             'Sumo__Plant__Influent__param__Q':[20000, 24000]}
+input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2.01],
+             'Sumo__Plant__Influent__param__Q':[21000, 24000]}
 param_dict = create_policy_dict(input_dic)
 
 # param_dict = {'trial1':{'Sumo__Plant__CSTR3__param__DOSP': 2,
@@ -49,5 +49,5 @@ test = CY_SUMO(model= model,
 # Run a batch of simulations,output tracking variables into test1.xlsx, 
 # and save .xml for each of steady-state simulations  
 test.steady_state(save_table = True, 
-                  save_name = "test1.xlsx", 
+                  save_name = "steady_state_results.xlsx", 
                   save_xml = True)

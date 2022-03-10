@@ -33,14 +33,16 @@ dynamic_inputs = {'Trial1':{'xml':'Cmd_ID_0.xml',
                             'param_dic':{'Sumo__Plant__CSTR3__param__DOSP': 2,
                                          'Sumo__Plant__Influent__param__Q':24000},
                             'input_fun':{"Sumo__Plant__Influent__param__TKN": lambda t: 32 + (42-32)/(1+np.exp(-5*(t-0.01))),
-                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)}},
+                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)},
+                            'tsv_file':['Influent_Table1.tsv']},
                   'Trial2':{'xml':'Cmd_ID_0.xml',
                             'stop_time':1*dur.day,
                             'data_comm_freq':1*dur.hour,
                             'param_dic':{'Sumo__Plant__CSTR3__param__DOSP': 1,
                                          'Sumo__Plant__Influent__param__Q':20000},
                             'input_fun':{"Sumo__Plant__Influent__param__TKN": lambda t: 32 + (42-32)/(1+np.exp(-5*(t-0.01))),
-                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)}}
+                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)},
+                            'tsv_file':['Influent_Table1.tsv']}
                   }
 
 

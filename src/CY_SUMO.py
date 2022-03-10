@@ -304,6 +304,7 @@ class CY_SUMO():
                 xml_file = f"Cmd_ID_{jobData['Cmd_ID']}.xml"
                 command = f"save {xml_file};"
                 self.sumo.sendCommand(job,command)
+                time.sleep(0.2) # Increase the sleep time if the .xml is saved in malform (whose size is smaller than others)
                 print(f"{xml_file} -------- saved-----------")
             self.SS_table = self.SS_table.append(self.current_sumo_vars[job],ignore_index = True)
             self.sumo.finish(job)
@@ -338,21 +339,24 @@ class CY_SUMO():
         dynamic_inputs : dictionary (nested)
             e.g. 
             dynamic_inputs = 
-            {'Trial1':{'xml':'Cmd_ID_0.xml',
+                 {'Trial1':{'xml':'Cmd_ID_0.xml',
                             'stop_time':1*dur.day,
                             'data_comm_freq':1*dur.hour,
                             'param_dic':{'Sumo__Plant__CSTR3__param__DOSP': 2,
                                          'Sumo__Plant__Influent__param__Q':24000},
                             'input_fun':{"Sumo__Plant__Influent__param__TKN": lambda t: 32 + (42-32)/(1+np.exp(-5*(t-0.01))),
-                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)}},
-             'Trial2':{'xml':'Cmd_ID_0.xml',
-                             'stop_time':1*dur.day,
-                             'data_comm_freq':1*dur.hour,
-                             'param_dic':{'Sumo__Plant__CSTR3__param__DOSP': 1,
-                                          'Sumo__Plant__Influent__param__Q':20000},
-                             'input_fun':{"Sumo__Plant__Influent__param__TKN": lambda t: 32 + (42-32)/(1+np.exp(-5*(t-0.01))),
-                                             "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)}}
+                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)},
+                            'tsv_file':['Influent_Table1.tsv']},
+                  'Trial2':{'xml':'Cmd_ID_0.xml',
+                            'stop_time':1*dur.day,
+                            'data_comm_freq':1*dur.hour,
+                            'param_dic':{'Sumo__Plant__CSTR3__param__DOSP': 1,
+                                         'Sumo__Plant__Influent__param__Q':20000},
+                            'input_fun':{"Sumo__Plant__Influent__param__TKN": lambda t: 32 + (42-32)/(1+np.exp(-5*(t-0.01))),
+                                         "Sumo__Plant__Influent__param__TCOD": lambda t: 400 + 50*np.sin(20*t)},
+                            'tsv_file':['Influent_Table1.tsv']}
                   }
+
             
         save_table : Boolean, optional
             Whether to save the simulations to a .xlsx file whose sheets are keys in the `dynamic_inputs`. The default is True.
@@ -373,6 +377,8 @@ class CY_SUMO():
         for a_dyn_key, a_dyn_input in dynamic_inputs.items():
             # Generate the commands for inputs 
             commands =  [f"load {a_dyn_input['xml']};", "maptoic;"]
+            for a_tsv in a_dyn_input['tsv_file']:
+                commands.append(f"loadtsv {a_tsv};")
             for a_constant_var, its_value in  a_dyn_input['param_dic'].items():
                 commands.append(f"set {a_constant_var} {its_value};")
                 # Add adjusted variables in sumo variable 
