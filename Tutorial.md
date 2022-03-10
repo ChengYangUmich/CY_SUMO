@@ -222,3 +222,11 @@ from CY_SUMO import CY_SUMO, create_policy_dict
 >>  6. Expected Results
 >>   - No error message shown in the Python console + logs (e.g. #1 530049 Core loop started. #1 530024 Following variable Sumo__Plant__Effluent__SNHx) from the `A2O.dll` are normal.   
 >>   - An excel file, 'dynamic.xlsx' that stores results of each dynamic simulations in a sheet, each columns of which are time series of sumo variables. 
+
+
+## Dynamic simulations with steady-state start
+In the SUMO GUI, there is a button called 'Steady-state start' under `SIMULATION-Dyamic` where the steady-state is reached and then start dynamic simulation. This could also be fulfilled in CY_SUMO by assembing the previous two steps. 
+> Step I: run a batch of steady_state simulations and save them as .xml files with `CY_SUMO.steady_state()`
+> Step II: specify these .xml files into the `dynamic_inputs` and continue dynamic simulation with `CY_SUMO.dynamic_run()` 
+
+The steady-state calculation is expensive. This two-step apprach saves time for the steady-state calculations in case repetitions are needed and the total number of simulations are in magnitude of hundreds and thousands. Additionally, it is easy to debug if things go wroing. 
