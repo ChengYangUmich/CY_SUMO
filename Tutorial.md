@@ -5,11 +5,11 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
  > Version: 2022_03_10
 
 ## Table of contents
-[**Step 0: Supplimentary SUMO Knowledge**](#step0)
+[**Supplimentary SUMO Knowledge**](#step0)
    1. [The computational core - `sumoproject.dll`](#sumocore)
 
 
-## Step 0: Supplimentary SUMO Knowledge <a name="step0"></a>
+## Supplimentary SUMO Knowledge <a name="step0"></a>
 ### The computational core - `sumoproject.dll`<a name="sumocore"></a>
 > In the SUMO GUI, equations are complied to C++ code for faster calculations. It is often to see a message in the bottom-left of the GUI - 'Preparing Simulation: Build progress: x% '. This process is called compling, where all information in the GUI are complied to a `.dll` file. Python can directly communicate with this computational core with SUMO-Python API.
 > 
@@ -47,11 +47,11 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 > 
 > 1. Search within the .xml file with CLT+F (Recommended).
 >      
-> 2. Search in SUMO GUI. OUTPUT SETUP--> bottom left panel --> dropdown bar changed from 'Variables' to 'Raw' --> Search the tree structure and hover mouse on variables;       
+> 2. Search in SUMO GUI. 'OUTPUT SETUP'--> bottom left panel --> dropdown bar changed from 'Variables' to 'Raw' --> search the tree structure and hover mouse on variables;       
 
 
 
-## Step 1: Prepare ingredients needed from CY_SUMO 
+## Prepare ingredients needed from CY_SUMO 
 1. Open target sumo project with SUMO GUI. In this case, it is `A2O plant.sumo`.
 2. Open the `Project Directory` of the SUMO project, copy and paste the `sumoproject.dll` to the working directory of python. In this case, it was renamed into `A2O.dll`. Rename is not mandatory.
 3. Save current values of the SUMO variable using the `save XXX.xml` command, then copy and paste it from the `Project Directory` to the working directory of python. In this case, it was saved as `A2O.xml`
@@ -62,3 +62,78 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 > - `A2O.dll`
 > - `A2O.xml`
 > - `Influent_Table1.tsv`
+> - `CY_SUMO.py`
+> - `sumoscheduler.py` (may not needed)
+
+## Steady-state simulations 
+**Scirpt template: [steadyStateSimulation.py](https://github.com/ChengYangUmich/CY_SUMO/blob/main/examples/steadyStateSimulation.py)** 
+> 1. Import required package and modules
+```python
+import sys
+# add the path where the CY_sumo locates 
+sys.path.append("..\src")
+from sumoscheduler import SumoScheduler
+from sumoscheduler import Duration as dur 
+import os
+import pandas as pd 
+import numpy as np
+import datetime
+# Import CY_SUMO class 
+from CY_SUMO import CY_SUMO, create_policy_dict
+```
+
+> 2. Define inputs for `CY_SUMO()`
+>>   1. Specify the sumo computational core 
+>> ```python
+>> # Get current path 
+>> current_path = os.getcwd()
+>> # Initiate name string of the sumo .dll core    
+>> model = os.path.join(current_path,"A2O.dll")
+>> ```
+>>   2. Specify the output sumo variables (incode names) to be stored in excel. 
+>> ```python
+>> sumo_variables = [
+>>                  "Sumo__Plant__Effluent__SNHx",
+>>                  "Sumo__Plant__Effluent__SNOx",
+>>                  "Sumo__Plant__Effluent__TCOD",
+>>                  "Sumo__Plant__Effluent__SPO4"]
+>> ```
+>>   3. Specify the input sumo variables that are changed in each steady-state simulation results.
+>>   
+>>   **Note:**
+>>   - A self-defined function `create_policy_dict()` from CY_SUMO.py was used to format inputs ranges into the standard input form `param_dict`for CY_SUMO(). 
+>>   - New parameters could be added in the form of `'sumo_incode_name': [x,y,...,z]` into the curly bracket of `input_dict`.
+>>   - New parameters could also be added in the form of `'sumo_incode_name': value` into each batch of `param_dict`.   
+>>```python
+>> input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2.01],
+>>              'Sumo__Plant__Influent__param__Q':[21000, 24000]}
+>> param_dict = create_policy_dict(input_dic)
+>> ```  
+>> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where the standard `param_dic` form should be:
+>> ```python 
+>> param_dict = {0:{'Sumo__Plant__CSTR3__param__DOSP': 2,
+>>                  'Sumo__Plant__Influent__param__Q':24000},
+>>               1:{'Sumo__Plant__CSTR3__param__DOSP': 1.5,
+>>                  'Sumo__Plant__Influent__param__Q':26000}}
+>> ```
+>>   4. Create the `CY_SUMO()` object
+>> ```python 
+>>   test = CY_SUMO(model= model,
+>>               sumo_variables=sumo_variables,
+>>               param_dic=param_dict)
+>> ```
+>>   5. Run steady_state()
+>> ```python
+>> test.steady_state(save_table = True, 
+>>                   save_name = "steady_state_results.xlsx", 
+>>                   save_xml = True)
+>> ```
+>> where:
+>> - `save_table`: True for saving sumo_variables into an excel file, whose default name is "steady_state_results.xlsx".
+>> - `save_name`: Used to rename the excel file.
+>> - `save_xml`: True for saving each steady-state simulation as a `.xml` file, which could be query later.
+>>   
+>>  6. Expected Results
+>>   - No error message shown in the Python console + logs (e.g. #1 530049 Core loop started. #1 530024 Following variable Sumo__Plant__Effluent__SNHx) from the `A2O.dll` are normal.   
+>>   - Four `.xml` files, namely `Cmd_ID_0.xml`,`Cmd_ID_1.xml`,`Cmd_ID_2.xml`,`Cmd_ID_3.xml` with identical/similar file size. If size differs more than several KBs, go to `CY_SUMO.py`- Line 307. Increase the number(in seconds) in time.sleep(0.2) so that the .ddl has more time to save results before being cleaned up. 
+>>   - An excel file, 'steady_state_results.xlsx' that stores results of each steady-state simulations, whose rows are different simuluations and columns are variables of interest. 
