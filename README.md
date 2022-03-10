@@ -3,7 +3,8 @@
  > Author: Cheng Yang, University of Michigan 
  > 
  > Version: 2022_03_07
-
+ >
+ > Tutorial: [here](https://github.com/ChengYangUmich/CY_SUMO/blob/main/Tutorial.md) 
 # About 
 This is a modulue that wraps up the SUMO-Pyhton API (Dynamita) that could run SUMO simulations in batches. With inputs and outputs pre-defined, all simulations could be run with several lines of codes. It is designed for users who want to run hundreds of thousands of SUMO simulations but with little knowledge of the SUMO-Python API. **It frees SUMO-users from iterative manual interactions with SUMO GUI.**
 
