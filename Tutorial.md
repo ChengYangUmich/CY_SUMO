@@ -91,7 +91,7 @@ import pandas as pd
 import numpy as np
 import datetime
 # Import CY_SUMO class 
-from CY_SUMO import CY_SUMO, create_policy_dict
+from CY_SUMO import CY_SUMO, create_param_dict
 ```
 
 > 2. Define inputs for `CY_SUMO()`
@@ -164,7 +164,7 @@ import pandas as pd
 import numpy as np
 import datetime
 # Import CY_SUMO class 
-from CY_SUMO import CY_SUMO, create_policy_dict
+from CY_SUMO import CY_SUMO, create_param_dict
 ```
 
 > 2. Define inputs for `CY_SUMO()`
