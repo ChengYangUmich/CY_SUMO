@@ -32,6 +32,6 @@ The following dependencies are *required* to use `CY_SUMO`:
 - [`datatime`](https://docs.python.org/3/library/datetime.html) 
 - [`time`](https://docs.python.org/3/library/time.html) 
 
-## Example python scripts 
+# Example python scripts 
 - [Steady-state simulations](https://github.com/ChengYangUmich/CY_SUMO/blob/main/examples/steadyStateSimulation.py)
 - [Dynamic simulations](https://github.com/ChengYangUmich/CY_SUMO/blob/main/examples/dynamicSimulation.py) 
