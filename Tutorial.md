@@ -10,7 +10,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
    2. [Storage of SUMO variables - `XXX.xml`](#sumostore)
    3. [SUMO Incode Names](#sumoincode)
 
-[**Prepare ingredients needed from CY_SUMO**](#step1)
+[**Prepare ingredients needed for CY_SUMO**](#step1)
 
 [**Steady-state simulations**](#step2)
 
@@ -63,7 +63,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 
 
 
-## Prepare ingredients needed from CY_SUMO <a name="step1"></a>
+## Prepare ingredients needed for CY_SUMO <a name="step1"></a>
 1. Open target sumo project with SUMO GUI. In this case, it is `A2O plant.sumo`.
 2. Open the `Project Directory` of the SUMO project, copy and paste the `sumoproject.dll` to the working directory of python. In this case, it was renamed into `A2O.dll`. Rename is not mandatory.
 3. Save current values of the SUMO variable using the `save XXX.xml` command, then copy and paste it from the `Project Directory` to the working directory of python. In this case, it was saved as `A2O.xml`
