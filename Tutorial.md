@@ -111,23 +111,27 @@ from CY_SUMO import CY_SUMO, create_param_dict
 >>                  "Sumo__Plant__Effluent__SPO4"]
 >> ```
 >>   3. Specify the input sumo variables that are changed in each steady-state simulation results.
->>   
->>   **Note:**
->>   - A self-defined function `create_param_dict()` from CY_SUMO.py was used to format inputs ranges into the standard input form `param_dict`for CY_SUMO(). 
->>   - New parameters could be added in the form of `'sumo_incode_name': [x,y,...,z]` into the curly bracket of `input_dict`.
->>   - New parameters could also be added in the form of `'sumo_incode_name': value` into each batch of `param_dict`.   
+
 >>```python
 >> input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2.01],
 >>              'Sumo__Plant__Influent__param__Q':[21000, 24000]}
 >> param_dict = create_param_dict(input_dic)
 >> ```  
->> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where the standard `param_dic` form should be:
+>> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where the standard `param_dic` form should be like:
 >> ```python 
->> param_dict = {0:{'Sumo__Plant__CSTR3__param__DOSP': 2,
->>                  'Sumo__Plant__Influent__param__Q':24000},
+>> param_dict = {
+>>               0:{'Sumo__Plant__CSTR3__param__DOSP': 2,
+>>                  'Sumo__Plant__Influent__param__Q':24000}, 
 >>               1:{'Sumo__Plant__CSTR3__param__DOSP': 1.5,
->>                  'Sumo__Plant__Influent__param__Q':26000}}
+>>                  'Sumo__Plant__Influent__param__Q':26000}
+>>               }
 >> ```
+>>   **Note:**
+>>   - A self-defined function `create_param_dict()` from CY_SUMO.py was used to format inputs ranges into the standard input form `param_dict`for CY_SUMO(). 
+>>   - New parameters could be added in the form of `'sumo_incode_name': [x,y,...,z]` into the curly bracket of `input_dict`.
+>>   - New parameters could also be added in the form of `'sumo_incode_name': value` into each batch of `param_dict`.       
+>>
+
 >>   4. Create the `CY_SUMO()` object
 >> ```python 
 >>   test = CY_SUMO(model= model,
