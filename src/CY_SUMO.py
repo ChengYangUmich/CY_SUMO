@@ -157,6 +157,7 @@ class CY_SUMO():
             for a_dic in self.param_dic.values():
                 for a_var in a_dic.keys():
                     self.sumo_variables.append(a_var)
+        self.sumo_variables = self._unique_list(self.sumo_variables)
         
     def _set_up_scheduler(self, msg_callback, datacomm_callback):
         """
@@ -457,3 +458,14 @@ class CY_SUMO():
                 print(f"{a_var} == {current_value}")
                 self.sumo.sendCommand(job, f"set {a_var} {current_value}")
                 
+       
+    def _unique_list(self, list1):
+        # initialize a null list
+        unique_list = []
+     
+        # traverse for all elements
+        for x in list1:
+            # check if exists in unique_list or not
+            if x not in unique_list:
+                unique_list.append(x)
+        return unique_list
