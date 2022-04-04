@@ -1,5 +1,5 @@
 # Tutorial for CY_SUMO
-Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through together examples that are provided in this repo (`.\examples\`) and template scripts can be adjusted based on users' needs.  
+Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through together examples that are provided in this repo (`.\examples\`) and template scripts can be revised based on users' needs.  
  > Author: Cheng Yang, University of Michigan 
  > 
  > Version: 2022_03_10
@@ -10,7 +10,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
    2. [Storage of SUMO variables - `XXX.xml`](#sumostore)
    3. [SUMO Incode Names](#sumoincode)
 
-[**Prepare ingredients needed from CY_SUMO**](#step1)
+[**Prepare ingredients needed for CY_SUMO**](#step1)
 
 [**Steady-state simulations**](#step2)
 
@@ -63,7 +63,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 
 
 
-## Prepare ingredients needed from CY_SUMO <a name="step1"></a>
+## Prepare ingredients needed for CY_SUMO <a name="step1"></a>
 1. Open target sumo project with SUMO GUI. In this case, it is `A2O plant.sumo`.
 2. Open the `Project Directory` of the SUMO project, copy and paste the `sumoproject.dll` to the working directory of python. In this case, it was renamed into `A2O.dll`. Rename is not mandatory.
 3. Save current values of the SUMO variable using the `save XXX.xml` command, then copy and paste it from the `Project Directory` to the working directory of python. In this case, it was saved as `A2O.xml`
@@ -111,23 +111,27 @@ from CY_SUMO import CY_SUMO, create_param_dict
 >>                  "Sumo__Plant__Effluent__SPO4"]
 >> ```
 >>   3. Specify the input sumo variables that are changed in each steady-state simulation results.
->>   
->>   **Note:**
->>   - A self-defined function `create_param_dict()` from CY_SUMO.py was used to format inputs ranges into the standard input form `param_dict`for CY_SUMO(). 
->>   - New parameters could be added in the form of `'sumo_incode_name': [x,y,...,z]` into the curly bracket of `input_dict`.
->>   - New parameters could also be added in the form of `'sumo_incode_name': value` into each batch of `param_dict`.   
+
 >>```python
 >> input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2.01],
 >>              'Sumo__Plant__Influent__param__Q':[21000, 24000]}
 >> param_dict = create_param_dict(input_dic)
 >> ```  
->> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where the standard `param_dic` form should be:
+>> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where the standard `param_dic` form should be like:
 >> ```python 
->> param_dict = {0:{'Sumo__Plant__CSTR3__param__DOSP': 2,
->>                  'Sumo__Plant__Influent__param__Q':24000},
+>> param_dict = {
+>>               0:{'Sumo__Plant__CSTR3__param__DOSP': 2,
+>>                  'Sumo__Plant__Influent__param__Q':24000}, 
 >>               1:{'Sumo__Plant__CSTR3__param__DOSP': 1.5,
->>                  'Sumo__Plant__Influent__param__Q':26000}}
+>>                  'Sumo__Plant__Influent__param__Q':26000}
+>>               }
 >> ```
+>>   **Note:**
+>>   - A self-defined function `create_param_dict()` from CY_SUMO.py was used to format inputs ranges into the standard input form `param_dict`for CY_SUMO(). 
+>>   - New parameters could be added in the form of `'sumo_incode_name': [x,y,...,z]` into the curly bracket of `input_dict`.
+>>   - New parameters could also be added in the form of `'sumo_incode_name': value` into each batch of `param_dict`.       
+>>
+
 >>   4. Create the `CY_SUMO()` object
 >> ```python 
 >>   test = CY_SUMO(model= model,
