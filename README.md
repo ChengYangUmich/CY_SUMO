@@ -6,7 +6,7 @@
  >
  > Tutorial: [here](https://github.com/ChengYangUmich/CY_SUMO/blob/main/Tutorial.md) 
 # About 
-This is a module that wraps up the SUMO-Pyhton API (Dynamita) that could run SUMO simulations in batches. With inputs and outputs pre-defined, all simulations could be run with several lines of codes. It is designed for users who want to run hundreds of thousands of SUMO simulations but with little knowledge of the SUMO-Python API. **It frees SUMO-users from iterative manual interactions with SUMO GUI.**
+This is a module that could run SUMO simulations in batches based on the SUMO-Pyhton API (Dynamita). With inputs and outputs pre-defined, all simulations could be run with several lines of codes. It is designed for users who want to run hundreds of thousands of SUMO simulations but with little knowledge of the SUMO-Python API. **It frees SUMO-users from iterative manual interactions with SUMO GUI.**
 
 Specifically, `CY_SUMO` is able to:
 - Implement steady-state simualtions in batches. Results from each steady-state simulation can be save as a 'XXX.xml', and outputs of interests could be stored into an excel file for comparision. An typical application is sensitivity analysis.    
