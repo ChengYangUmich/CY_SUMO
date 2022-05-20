@@ -307,7 +307,9 @@ class CY_SUMO():
                 self.sumo.sendCommand(job,command)
                 time.sleep(0.2) # Increase the sleep time if the .xml is saved in malform (whose size is smaller than others)
                 print(f"{xml_file} -------- saved-----------")
-            self.SS_table = self.SS_table.append(self.current_sumo_vars[job],ignore_index = True)
+            x = pd.DataFrame([self.current_sumo_vars[job]])
+            self.SS_table = pd.concat([self.SS_table,x], ignore_index=True)
+            # self.SS_table = self.SS_table.append(self.current_sumo_vars[job],ignore_index = True)
             self.sumo.finish(job)
     
     def _steady_state_datacomm_callback(self,job,data):
@@ -450,8 +452,10 @@ class CY_SUMO():
 
         """
         jobData = self.sumo.getJobData(job)
-        data["Sumo__Time"] /= self.sumo.dur.day        
-        self._myDataDic[jobData['key_ID']] = self._myDataDic[jobData['key_ID']].append(data,ignore_index = True)
+        data["Sumo__Time"] /= self.sumo.dur.day 
+        x = pd.DataFrame([data])
+        self._myDataDic[jobData['key_ID']] = pd.concat([self._myDataDic[jobData['key_ID']] ,x],ignore_index=True)
+        # self._myDataDic[jobData['key_ID']] = self._myDataDic[jobData['key_ID']].append(data,ignore_index = True)
         if len(jobData['info']['input_fun']) !=0:
             for a_var,a_fun in jobData['info']['input_fun'].items():
                 current_value = a_fun(data["Sumo__Time"])

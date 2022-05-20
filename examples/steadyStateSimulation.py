@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 
 # importing sys
+import os
 import sys
 # add the path where the CY_sumo locates 
-sys.path.append("..\src")
+# sys.path.append("..\src")
+os.chdir("..\src")
+# Import CY_SUMO class 
+from CY_SUMO import CY_SUMO, create_param_dict
+os.chdir("..\examples")
 from sumoscheduler import SumoScheduler
 from sumoscheduler import Duration as dur 
 import os
 import pandas as pd 
 import numpy as np
 import datetime
-# Import CY_SUMO class 
-from CY_SUMO import CY_SUMO, create_param_dict
+
 
 """
 This is an example script to replicate the steady-state simulations in the SUMO GUI

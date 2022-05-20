@@ -532,7 +532,7 @@
         <value>2.042810365310288e-14</value>
     </real>
     <real name="Sumo__GISAEffectiveMaxPerturbation_AlgebraicLoop">
-        <value>1.335110182972709e-306</value>
+        <value>0</value>
     </real>
     <real name="Sumo__GISAEffectiveMinPerturbation_AlgebraicLoop">
         <value>0</value>
