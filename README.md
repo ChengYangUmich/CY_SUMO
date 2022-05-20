@@ -31,6 +31,7 @@ The following dependencies are *required* to use `CY_SUMO`:
 - [`os`](https://docs.python.org/3/library/os.html)
 - [`datatime`](https://docs.python.org/3/library/datetime.html) 
 - [`time`](https://docs.python.org/3/library/time.html) 
+- [`openpyxl`](https://openpyxl.readthedocs.io/en/stable/)
 
 # Example python scripts 
 - [Steady-state simulations](https://github.com/ChengYangUmich/CY_SUMO/blob/main/examples/steadyStateSimulation.py)
