@@ -38,7 +38,7 @@ sumo_variables = [
                   "Sumo__Plant__Effluent__SPO4"]
 # Create the param_dict  
 input_dic = {'Sumo__Plant__CSTR3__param__DOSP': [1,2],
-             'Sumo__Plant__Influent__param__Q':[21000, 24000]}
+             'Sumo__Plant__Influent__param__Q':[20000, 24000]}
 param_dict = create_param_dict(input_dic)
 
 # param_dict = {'trial1':{'Sumo__Plant__CSTR3__param__DOSP': 2,
@@ -49,9 +49,11 @@ param_dict = create_param_dict(input_dic)
 # Create a CY_SUMO object 
 test = CY_SUMO(model= model,
                sumo_variables=sumo_variables,
-               param_dic=param_dict)
-# Run a batch of simulations,output tracking variables into test1.xlsx, 
+               param_dic=param_dict,
+               default_xml = "A2O.xml")
+# Run a batch of simulations,output tracking variables into steady_state_results.xlsx, 
 # and save .xml for each of steady-state simulations  
 test.steady_state(save_table = True, 
                   save_name = "steady_state_results.xlsx", 
-                  save_xml = True)
+                  save_xml = True,
+                  sumo_default = False)

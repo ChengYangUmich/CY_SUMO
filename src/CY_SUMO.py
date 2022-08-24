@@ -179,7 +179,7 @@ class CY_SUMO():
         self.sumo.message_callback = msg_callback
         self.sumo.datacomm_callback = datacomm_callback
     
-    def _line_command(self, a_dict, default_xml= None):
+    def _line_command(self, a_dict, sumo_default):
         """
         (Internal) Method, used to create a one-line commands seperated with ';'
         from an initial condition dictionary that could be input into the SUMO
@@ -199,19 +199,19 @@ class CY_SUMO():
                   set Sumo__Plant__Influent__param__Q 24000;start;"
         """
         # If not .xml file is given, reset and start simulations
-        if default_xml == None:
+        if sumo_default == True:
             commands = "reset;"
         # If .xml file is given, load .xml file, map to initial condition and then start 
         else:
-            commands = f"load {self.current_xml};maptoic;"
+            commands = f"load {self.default_xml};maptoic;"
         commands += "mode steady;"
         # append ajusted variables into the one-line command string 
         for a_key, a_val in a_dict.items():
             commands += f"set {a_key} {a_val};"
-            commands += "start;"
+        commands += "start;"
         return commands
    
-    def _set_ss_commands(self):
+    def _set_ss_commands(self,sumo_default):
         """
         (Internal) Method, used to create a list of commands used for 
         steady-state simulations, and stored it in self._param_commands_dic
@@ -222,21 +222,27 @@ class CY_SUMO():
                    "set Sumo__Plant__Influent__param__Q 24000",
                    "start"]
         """
-        if self.param_dic == None:
+        if sumo_default:
             self._param_commands_dic[0] = 'reset;mode steady;start'
-        # if `self.param_dic` is a nested diction
-        elif any(isinstance(i,dict) for i in self.param_dic.values()):            
-            for a_dic_key,a_dic in self.param_dic.items():
-                self._param_commands_dic[a_dic_key] = self._line_command(a_dic)
         else:
-            self._param_commands_dic[0] = self._line_command(self.param_dic)
+            if self.param_dic == None:
+                self._param_commands_dic[0] = 'load {self.default_xml};maptoic;mode steady;start'
+            # if `self.param_dic` is a nested diction
+            elif any(isinstance(i,dict) for i in self.param_dic.values()):            
+                for a_dic_key,a_dic in self.param_dic.items():
+                    self._param_commands_dic[a_dic_key] = self._line_command(a_dic,sumo_default)
+            else:
+                self._param_commands_dic[0] = self._line_command(self.param_dic,sumo_default)
+
     
     # Code block replicating steady-state simulations
-    def steady_state(self, save_table = True, 
+    def steady_state(self, sumo_default = False, save_table = True, 
                      save_name = "steady_state_result.xlsx", save_xml = False):
         """
         Parameters
         ----------
+        sumo_default: Boolean, optional
+            Whether to reset back to all sumo default 
         save_table : Boolean, optional  
             Whether to save the self.ss_table
         save_name : String, optional 
@@ -254,7 +260,7 @@ class CY_SUMO():
         # An intermediate boolean used in steady_state_msg_callback 
         self._save_xml = save_xml
         # Create the steady-state commands in lists 
-        self._set_ss_commands()
+        self._set_ss_commands(sumo_default=sumo_default)
         # Register callback functions 
         msg_callback = self._steady_state_msg_callback
         datacomm_callback = self._steady_state_datacomm_callback
@@ -270,12 +276,13 @@ class CY_SUMO():
                 variables = self.sumo_variables,
                 jobData ={"SS_cmd": a_line_command,
                           "Cmd_ID": a_key})
+                # blockDatacomm=True)
         print("Jobs started:", self.sumo.scheduledJobs)
         
         while (self.sumo.scheduledJobs > 0):
             time.sleep(0.1)
 
-        self.sumo.scheduler.cleanup()
+        # self.sumo.scheduler.cleanup()
         
         if save_table == True:
             self.SS_table.to_excel(save_name)
@@ -305,7 +312,7 @@ class CY_SUMO():
                 xml_file = f"Cmd_ID_{jobData['Cmd_ID']}.xml"
                 command = f"save {xml_file};"
                 self.sumo.sendCommand(job,command)
-                time.sleep(0.2) # Increase the sleep time if the .xml is saved in malform (whose size is smaller than others)
+                time.sleep(2) # Increase the sleep time if the .xml is saved in malform (whose size is smaller than others)
                 print(f"{xml_file} -------- saved-----------")
             x = pd.DataFrame([self.current_sumo_vars[job]])
             self.SS_table = pd.concat([self.SS_table,x], ignore_index=True)
