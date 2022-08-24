@@ -386,10 +386,11 @@ class CY_SUMO():
         
         for a_dyn_key, a_dyn_input in dynamic_inputs.items():
             # Generate the commands for inputs 
-            commands =  [f"load {a_dyn_input['xml']};", "maptoic;"]
+            temp_xml = a_dyn_input['xml']
+            commands =  [f'load "{temp_xml}";', "maptoic;"]
             if a_dyn_input['tsv_file'] != None:
                 for a_tsv in a_dyn_input['tsv_file']:
-                    commands.append(f"loadtsv {a_tsv};")
+                    commands.append(f'loadtsv "{a_tsv}";')
             for a_constant_var, its_value in  a_dyn_input['param_dic'].items():
                 commands.append(f"set {a_constant_var} {its_value};")
                 # Add adjusted variables in sumo variable 
