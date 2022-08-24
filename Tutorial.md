@@ -136,19 +136,26 @@ from CY_SUMO import CY_SUMO, create_param_dict
 >> ```python 
 >>   test = CY_SUMO(model= model,
 >>               sumo_variables=sumo_variables,
->>               param_dic=param_dict)
+>>               param_dic=param_dict,
+>>               default_xml = "A2O.xml")
 >> ```
+>>   **Note:**
+>>   - default_xml is needed if any changes that are different from SUMO default values are not specified in param_dic. For instance, the SUMO default volume of CSTR3 is 10000 m3, yet in A20.sumo, its value is 4500 m3. In order to make such setting effective, we could either mannually add them one by one in the param_dict or ask sumo to load their values from A2O.xml   
+
 >>   5. Run steady_state()
 >> ```python
 >> test.steady_state(save_table = True, 
 >>                   save_name = "steady_state_results.xlsx", 
->>                   save_xml = True)
+>>                   save_xml = True,
+>>                   sumo_default = False)
 >> ```
 >> where:
 >> - `save_table`: True for saving sumo_variables into an excel file, whose default name is "steady_state_results.xlsx".
 >> - `save_name`: Used to rename the excel file.
 >> - `save_xml`: True for saving each steady-state simulation as a `.xml` file, which could be query later.
->>   
+>> - `sumo_default`:True for restoring everything back to the sumo default values. Usually, it is set as false if default_xml is specified. 
+
+
 >>  6. Expected Results
 >>   - No error message shown in the Python console + logs (e.g. #1 530049 Core loop started. #1 530024 Following variable Sumo__Plant__Effluent__SNHx) from the `A2O.dll` are normal.   
 >>   - Four `.xml` files, namely `Cmd_ID_0.xml`,`Cmd_ID_1.xml`,`Cmd_ID_2.xml`,`Cmd_ID_3.xml` with identical/similar file size. If size differs more than several KBs, go to `CY_SUMO.py`- Line 307. Increase the number(in seconds) in time.sleep(0.2) so that the .ddl has more time to save results before being cleaned up. 
