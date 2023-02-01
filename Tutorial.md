@@ -21,7 +21,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 
 ## Supplimentary SUMO Knowledge <a name="step0"></a>
 ### The computational core - `sumoproject.dll`<a name="sumocore"></a>
-> In the SUMO GUI, equations are complied to C++ code for faster calculations. It is often to see a message in the bottom-left of the GUI - 'Preparing Simulation: Build progress: x% '. This process is called compling, where all information in the GUI are complied to a `.dll` file. Python can directly communicate with this computational core with SUMO-Python API.
+> In the SUMO GUI, equations are complied to C++ code for faster calculations. It is often to see a message in the bottom-left of the GUI - 'Preparing Simulation: Build progress: x% '. This process is called compiling, where all information in the GUI are complied to a `.dll` file. Python can directly communicate with this computational core with SUMO-Python API.
 > 
 > **How to find this core?**
 > >
