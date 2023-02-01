@@ -251,4 +251,4 @@ In the SUMO GUI, there is a button called 'Steady-state start' under `SIMULATION
 > 
 > Step II: specify these .xml files into the `dynamic_inputs` and continue dynamic simulation with `CY_SUMO.dynamic_run()` 
 
-The steady-state calculation is expensive. This two-step apprach saves time for the steady-state calculations in case that repetitions are needed. More computational time could be saved as the total number of simulations increases towards a magnitude of hundreds and thousands. Additionally, it is easy to debug if things go wroing. 
+The steady-state calculation is expensive. This two-step apprach saves time for the steady-state calculations in case that repetitions are needed. More computational time could be saved as the total number of simulations increases towards a magnitude of hundreds and thousands. Additionally, it is easy to debug if things go wrong. 
