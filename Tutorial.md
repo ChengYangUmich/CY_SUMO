@@ -32,7 +32,7 @@ Detailed Tutorial for using CY_SUMO. In this tutorial, we will walk through toge
 
 ### Storage of SUMO variables - `XXX.xml`<a name="sumostore"></a>
 > - Values of all variables and information @ current simulation time stamp, including parameters, states, constants and others, are stored in a `XXX.xml` file, which could be loaded into the sumo computational core or saved from the sumo computational core. 
-> - Dynamic Inputs (input_tables) are stored in a seperate form called `.tsv`. They could be found the same way as fining the `sumoproject.dll`
+> - Dynamic Inputs (input_tables) are stored in a seperate form called `.tsv`. They could be found the same way as finding the `sumoproject.dll`
 > 
 > **How to save .xml file for CY_SUMO?**
 > 
